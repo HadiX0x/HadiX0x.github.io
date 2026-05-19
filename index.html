@@ -14,9 +14,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             padding-bottom: 90px; 
         }
-        /* تأثير التوهج والبروز للمربعات عند الحوم فوقها */
+        /* تأثير البروز والتوهج للمربعات */
         .glow-effect:hover { 
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); 
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); 
             border-color: #f59e0b; 
             transform: translateY(-4px); 
         }
@@ -42,8 +42,7 @@
                    class="w-full bg-gray-900/80 border border-gray-700 rounded-xl py-3 pr-10 pl-4 text-white text-sm focus:outline-none focus:border-amber-500 text-right backdrop-blur-sm">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesContainer">
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesContainer"></div>
     </div>
 
     <div id="services-tab" class="tab-content max-w-2xl mx-auto">
@@ -116,13 +115,12 @@
     </div>
 
     <script>
-        // إعلام التيليجرام بتهيئة الويب آب ليكون متجاوباً بالكامل ومثبتاً
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand(); // فتح الواجهة على كامل الشاشة تلقائياً
+            window.Telegram.WebApp.expand(); 
         }
 
-        // قائمة الألعاب الاحترافية الستة الأهم مع روابط صور دقيقة ومميزة لكل لعبة
+        // لستة الألعاب الستة الأساسية مع صورها المصغرة الفخمة المدمجة
         const gamesData = [
             { name: "Animals ＆ Coins", image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=60" },
             { name: "Coin Master", image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400&auto=format&fit=crop&q=60" },
@@ -132,7 +130,7 @@
             { name: "Merge Gardens", image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=400&auto=format&fit=crop&q=60" }
         ];
 
-        // باقات مستويات التفتيح المطلوبة والأسعار الموزونة بالملي
+        // باقات مستويات التفتيح والأسعار الثابتة (10 ليفل بـ 1$)
         const pricePacks = [
             { text: "⚡ تفتيح 10 مستويات ─── بسعر 1$ 💵", value: "10_levels_1$" },
             { text: "⚡ تفتيح 20 مستوى ─── بسعر 2$ 💵", value: "20_levels_2$" },
@@ -140,7 +138,7 @@
             { text: "🔥 باقة التفتيح الكامل الأقصى ─── بسعر 5$ 💵", value: "max_pack_5$" }
         ];
 
-        // توليد الألعاب على شكل مربعات وكروت متناسقة بالكامل
+        // توليد الكروت المربعات تلقائياً بالواجهة
         const container = document.getElementById('gamesContainer');
         gamesData.forEach((game, index) => {
             let optionsHtml = pricePacks.map(pack => `<option value="${pack.value}">${pack.text}</option>`).join('');
@@ -173,35 +171,25 @@
             container.appendChild(card);
         });
 
-        // دالة إرسال الطلبات أوتوماتيكياً للبوت بلمحة زر عن بعد
+        // إرسال البيانات أوتوماتيكياً للبوت وإغلاق الموقع فوراً عند الضغط
         function orderJump(gameName, id) {
             const selectedPackValue = document.getElementById(`pack-${id}`).value;
-            
-            const payload = {
-                type: "jumper_request",
-                game: gameName,
-                pack: selectedPackValue
-            };
+            const payload = { type: "jumper_request", game: gameName, pack: selectedPackValue };
 
-            // إرسال البيانات بشكل مشفر وفوري للبوت وإغلاق الويب آب تلقائياً
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.sendData(JSON.stringify(payload));
             } else {
-                alert(`🎯 تجربة محلية (خارج التيليجرام):\n🎮 اللعبة: ${gameName}\n📦 الباقة المشحونة: ${selectedPackValue}`);
+                alert(`🎯 تجربة محلية:\n🎮 اللعبة: ${gameName}\n📦 الباقة: ${selectedPackValue}`);
             }
         }
 
-        // إرسال طلبات الخدمات الأخرى للبوت
         function requestService(serviceName) {
             const payload = { type: "service_request", service: serviceName };
             if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.sendData(JSON.stringify(payload));
-            } else {
-                alert(`🎯 طلب خدمة: ${serviceName}`);
             }
         }
 
-        // دالة التبديل السلس والسريع بين الواجهات من الشريط السفلي
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(`${tabName}-tab`).classList.add('active');
@@ -210,16 +198,13 @@
             navs.forEach(nav => {
                 const el = document.getElementById(`nav-${nav}`);
                 if (nav === tabName) {
-                    el.classList.remove('text-gray-500');
-                    el.classList.add('text-amber-400');
+                    el.classList.remove('text-gray-500'); el.classList.add('text-amber-400');
                 } else {
-                    el.classList.remove('text-amber-400');
-                    el.classList.add('text-gray-500');
+                    el.classList.remove('text-amber-400'); el.classList.add('text-gray-500');
                 }
             });
         }
 
-        // دالة شريط البحث الفوري داخل المربعات
         function searchGames() {
             const input = document.getElementById('searchBox').value.toLowerCase();
             const cards = document.getElementsByClassName('game-card');
