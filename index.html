@@ -5,169 +5,221 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HadiX Nexus</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0b0f19; color: #e5e7eb; font-family: 'Segoe UI', Tahoma, sans-serif; padding-bottom: 80px; }
-        .glow-effect:hover { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); border-color: #10b981; }
+        body { 
+            background-color: #0b0f19; 
+            color: #e5e7eb; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding-bottom: 90px; 
+        }
+        /* تأثير التوهج والبروز للمربعات عند الحوم فوقها */
+        .glow-effect:hover { 
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); 
+            border-color: #f59e0b; 
+            transform: translateY(-4px); 
+        }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 select-none">
 
     <div id="games-tab" class="tab-content active max-w-6xl mx-auto">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500 mb-2">🎮 متجر جمبرة الألعاب</h1>
-            <p class="text-gray-400 text-xs">اختر لعبتك والليفل المطلوب، ودع المحرك يتكفل بالباقي</p>
+            <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 mb-2">
+                🎮 متجر جمبرة الألعاب
+            </h1>
+            <p class="text-gray-400 text-xs md:text-sm">اختر لعبتك المفضلة وحدد باقة المستويات المطلوبة فوراً</p>
         </div>
         
-        <div class="max-w-md mx-auto mb-6 relative">
-            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"><i class="fas fa-search"></i></span>
-            <input type="text" id="searchBox" onkeyup="searchGames()" placeholder="ابحث عن لعبتك..." class="w-full bg-gray-900 border border-gray-700 rounded-xl py-2.5 pr-10 pl-4 text-white text-sm focus:outline-none focus:border-emerald-500 text-right">
+        <div class="max-w-md mx-auto mb-8 relative">
+            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" id="searchBox" onkeyup="searchGames()" placeholder="ابحث عن لعبتك المفضلة..." 
+                   class="w-full bg-gray-900/80 border border-gray-700 rounded-xl py-3 pr-10 pl-4 text-white text-sm focus:outline-none focus:border-amber-500 text-right backdrop-blur-sm">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesContainer"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesContainer">
+            </div>
     </div>
 
     <div id="services-tab" class="tab-content max-w-2xl mx-auto">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 mb-2">💰 الشحن وتفعيل الخدمات</h1>
-            <p class="text-gray-400 text-xs">اختر باقتك المفضلة وقم بطلب التفعيل فوراً</p>
+            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 mb-2">
+                💰 الشحن وتفعيل الخدمات
+            </h1>
+            <p class="text-gray-400 text-xs">قم بشراء الباقات وتفعيل ميزات الـ VIP لحسابك</p>
         </div>
-
         <div class="space-y-4">
-            <div class="bg-gray-950 border border-gray-800 rounded-2xl p-5 text-right glow-effect">
+            <div class="bg-gray-950 border border-gray-800 rounded-2xl p-5 text-right glow-effect transition-all duration-300">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="bg-amber-950 text-amber-400 text-xs px-2 py-1 rounded border border-amber-800">الأكثر طلباً ⭐</span>
+                    <span class="bg-amber-950/60 text-amber-400 text-xs px-2 py-1 rounded border border-amber-800/50 font-bold">الأكثر طلباً ⭐</span>
                     <h3 class="text-lg font-bold text-white">اشتراك HadiX الماسي (شهري)</h3>
                 </div>
-                <p class="text-sm text-gray-400 mb-4">جمبرة غير محدودة لجميع الألعاب طوال الشهر مع دعم وإضافات حصرية.</p>
-                <button onclick="requestService('اشتراك ماسي شهري')" class="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white py-2 rounded-xl text-sm font-medium">طلب الخدمة الآن 💎</button>
-            </div>
-
-            <div class="bg-gray-950 border border-gray-800 rounded-2xl p-5 text-right glow-effect">
-                <h3 class="text-lg font-bold text-white mb-2">جمبرة لعبة واحدة (تفتيح ليفل محدد)</h3>
-                <p class="text-sm text-gray-400 mb-4">توصيل حسابك لليفل الأقصى في لعبة معينة تختارها من القائمة.</p>
-                <button onclick="requestService('جمبرة لعبة منفردة')" class="w-full bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-xl text-sm font-medium">طلب جمبرة خاصة 🚀</button>
+                <p class="text-sm text-gray-400 mb-4">جمبرة وتفتيح مستويات غير محدود لجميع الألعاب طوال الشهر مع أولوية تشغيل السكربتات.</p>
+                <button onclick="requestService('VIP_Monthly_Pass')" 
+                        class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black py-2.5 rounded-xl text-xs tracking-wider transition-all duration-300 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                    طلب تفعيل الاشتراك الماسي 💎
+                </button>
             </div>
         </div>
     </div>
 
     <div id="settings-tab" class="tab-content max-w-xl mx-auto">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 mb-2">⚙️ الإعدادات والدعم الفني</h1>
-            <p class="text-gray-400 text-xs">تخصيص التطبيق والتواصل المباشر مع المطور</p>
+            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 mb-2">
+                ⚙️ الإعدادات والدعم الفني
+            </h1>
+            <p class="text-gray-400 text-xs">تخصيص الواجهة والتواصل الفوري مع الإدارة</p>
         </div>
-
         <div class="bg-gray-950 border border-gray-800 rounded-2xl p-6 space-y-6 text-right">
             <div>
                 <label class="block text-sm font-bold mb-2 text-gray-300">🌐 لغة التطبيق / Language</label>
                 <div class="flex gap-2">
-                    <button class="flex-1 bg-emerald-600 text-white py-2 rounded-xl text-sm font-medium">العربية</button>
-                    <button class="flex-1 bg-gray-900 border border-gray-700 text-gray-400 py-2 rounded-xl text-sm font-medium hover:text-white">English</button>
+                    <button class="flex-1 bg-amber-500 text-black font-bold py-2 rounded-xl text-sm">العربية</button>
+                    <button class="flex-1 bg-gray-900 border border-gray-700 text-gray-400 py-2 rounded-xl text-sm font-medium hover:text-white transition-all">English</button>
                 </div>
             </div>
-
             <hr class="border-gray-800">
-
             <div>
                 <label class="block text-sm font-bold mb-3 text-gray-300">💬 قنوات الدعم الفني المباشر</label>
                 <div class="space-y-2">
-                    <a href="https://wa.me/963900000000" target="_blank" class="flex items-center justify-between bg-green-950/50 border border-green-800/40 hover:bg-green-950 p-3 rounded-xl transition-all">
-                        <span class="text-green-400 text-xs font-bold">متاح الآن <i class="fas fa-circle text-[8px] animate-pulse"></i></span>
+                    <a href="https://wa.me/963955123456" target="_blank" class="flex items-center justify-between bg-green-950/30 border border-green-800/40 hover:bg-green-950/60 p-3 rounded-xl transition-all">
+                        <span class="text-green-400 text-xs font-bold">متاح الآن <i class="fas fa-circle text-[8px] animate-pulse mr-1"></i></span>
                         <div class="flex items-center gap-3">
                             <span class="text-sm font-medium">تواصل عبر الواتساب</span>
                             <i class="fab fa-whatsapp text-green-500 text-xl"></i>
                         </div>
                     </a>
-                    <a href="mailto:hadi@example.com" class="flex items-center justify-between bg-blue-950/50 border border-blue-800/40 hover:bg-blue-950 p-3 rounded-xl transition-all">
-                        <span class="text-blue-400 text-xs">إرسال شكوى</span>
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm font-medium">الدعم عبر الإيميل</span>
-                            <i class="fas fa-envelope text-blue-500 text-xl"></i>
-                        </div>
-                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-gray-950/90 backdrop-blur-md border-t border-gray-800 px-6 py-2 flex justify-around items-center z-50">
-        <button onclick="switchTab('settings')" id="nav-settings" class="flex flex-col items-center text-gray-500 hover:text-emerald-400 transition-all">
-            <i class="fas fa-cog text-xl mb-1"></i><span class="text-[10px]">الإعدادات</span>
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-950/95 backdrop-blur-md border-t border-gray-800 px-6 py-2 flex justify-around items-center z-50">
+        <button onclick="switchTab('settings')" id="nav-settings" class="flex flex-col items-center text-gray-500 hover:text-amber-400 transition-all duration-200">
+            <i class="fas fa-cog text-xl mb-1"></i><span class="text-[10px] font-medium">الإعدادات</span>
         </button>
-        <button onclick="switchTab('services')" id="nav-services" class="flex flex-col items-center text-gray-500 hover:text-emerald-400 transition-all">
-            <i class="fas fa-wallet text-xl mb-1"></i><span class="text-[10px]">الشحن</span>
+        <button onclick="switchTab('services')" id="nav-services" class="flex flex-col items-center text-gray-500 hover:text-amber-400 transition-all duration-200">
+            <i class="fas fa-wallet text-xl mb-1"></i><span class="text-[10px] font-medium">الشحن</span>
         </button>
-        <button onclick="switchTab('games')" id="nav-games" class="flex flex-col items-center text-emerald-400 transition-all">
-            <i class="fas fa-gamepad text-xl mb-1"></i><span class="text-[10px]">الألعاب</span>
+        <button onclick="switchTab('games')" id="nav-games" class="flex flex-col items-center text-amber-400 transition-all duration-200">
+            <i class="fas fa-gamepad text-xl mb-1"></i><span class="text-[10px] font-medium">الألعاب</span>
         </button>
     </div>
 
+    <div class="text-center mt-12 text-gray-600 text-[10px] tracking-widest border-t border-gray-900 pt-6">
+        ✨ ─── [ MADE BY HADI ABBOUD ] ─── ✨
+    </div>
+
     <script>
-        // لستة الألعاب الذكية مع الإيفينتات والليفلات الجاهزة للزبون بدون ما يشوف الأكواد الكريهة
+        // إعلام التيليجرام بتهيئة الويب آب ليكون متجاوباً بالكامل ومثبتاً
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand(); // فتح الواجهة على كامل الشاشة تلقائياً
+        }
+
+        // قائمة الألعاب الاحترافية الستة الأهم مع روابط صور دقيقة ومميزة لكل لعبة
         const gamesData = [
-            { name: "Animals ＆ Coins", levels: ["ليفل 68 الماسي 💎"] },
-            { name: "Coin Master", levels: ["قرية 1 المبتدئة ⚖️", "قرية 230 المتقدمة 🔥"] },
-            { name: "Merge Gardens", levels: ["ترقية ليفل 3 ⭐", "ترقية ليفل 4 ⭐"] },
-            { name: "Merge Dragons!", levels: ["طاقة تنين 5 🐉", "طاقة تنين 450 🐉", "تفتيح ماب 11 إلى 20"] },
-            { name: "Match Factory", levels: ["تخطي ليفل 5 🎯", "تخطي ليفل 4600 🏆"] },
-            { name: "Dice Dreams", levels: ["استعادة المملكة 1 👑", "استعادة المملكة 250 👑"] },
-            { name: "Toon Blast", levels: ["تخطي ليفل 4060 💥"] },
-            { name: "Toy Blast", levels: ["تخطي ليفل 3835 🧸"] },
-            { name: "Domino Dreams", levels: ["إنهاء المهمة الأولى", "تخطي ليفل 5", "إنهاء منطقة 25 🃏"] }
+            { name: "Animals ＆ Coins", image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=60" },
+            { name: "Coin Master", image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400&auto=format&fit=crop&q=60" },
+            { name: "Dice Dreams", image: "https://images.unsplash.com/photo-1585504198199-20277593b94f?w=400&auto=format&fit=crop&q=60" },
+            { name: "Toon Blast", image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400&auto=format&fit=crop&q=60" },
+            { name: "Match Factory", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=60" },
+            { name: "Merge Gardens", image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=400&auto=format&fit=crop&q=60" }
         ];
 
-        // توليد الألعاب تلقائياً بالواجهة
+        // باقات مستويات التفتيح المطلوبة والأسعار الموزونة بالملي
+        const pricePacks = [
+            { text: "⚡ تفتيح 10 مستويات ─── بسعر 1$ 💵", value: "10_levels_1$" },
+            { text: "⚡ تفتيح 20 مستوى ─── بسعر 2$ 💵", value: "20_levels_2$" },
+            { text: "⚡ تفتيح 30 مستوى ─── بسعر 3$ 💵", value: "30_levels_3$" },
+            { text: "🔥 باقة التفتيح الكامل الأقصى ─── بسعر 5$ 💵", value: "max_pack_5$" }
+        ];
+
+        // توليد الألعاب على شكل مربعات وكروت متناسقة بالكامل
         const container = document.getElementById('gamesContainer');
         gamesData.forEach((game, index) => {
-            let optionsHtml = game.levels.map(lvl => `<option value="${lvl}">${lvl}</option>`).join('');
+            let optionsHtml = pricePacks.map(pack => `<option value="${pack.value}">${pack.text}</option>`).join('');
             
             const card = document.createElement('div');
-            card.className = 'game-card bg-gray-950 border border-gray-800 rounded-2xl p-5 text-right transition-all duration-300 glow-effect';
+            card.className = 'game-card bg-gray-950 border border-gray-800 rounded-2xl overflow-hidden text-right transition-all duration-300 glow-effect flex flex-col';
             card.innerHTML = `
-                <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-star text-emerald-500 ml-1 text-sm"></i> ${game.name}</h3>
-                <div class="space-y-3">
-                    <label class="block text-xs text-gray-400">اختر المستوى أو الإنجاز المطلوب:</label>
-                    <select id="level-${index}" class="w-full bg-gray-900 border border-gray-700 rounded-xl py-2 px-3 text-sm text-white focus:outline-none focus:border-emerald-500">
-                        ${optionsHtml}
-                    </select>
-                    <button onclick="orderJump('${game.name}', ${index})" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-medium py-2 rounded-xl text-sm shadow-md">طلب جمبرة فورية 🚀</button>
+                <div class="h-36 w-full overflow-hidden relative bg-gray-900">
+                    <img src="${game.image}" alt="${game.name}" class="w-full h-full object-cover opacity-75 hover:opacity-100 transition-all duration-300">
+                    <span class="absolute top-2 right-2 bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow">VIP ENGINE</span>
+                </div>
+                <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                    <h3 class="text-base font-bold text-white flex items-center justify-between">
+                        <span>${game.name}</span>
+                        <i class="fas fa-gamepad text-amber-400 text-xs"></i>
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="block text-[10px] text-gray-400">اختر حزمة تفتيح المستويات:</label>
+                        <select id="pack-${index}" class="w-full bg-gray-900 border border-gray-700 rounded-xl py-2 px-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                    <button onclick="orderJump('${game.name}', ${index})" 
+                            class="w-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-black py-2.5 rounded-xl text-xs tracking-wide transition-all duration-300 shadow-[0_0_12px_rgba(245,158,11,0.5)] hover:shadow-[0_0_22px_rgba(250,204,21,0.8)] transform active:scale-95 flex items-center justify-center gap-2 border border-yellow-300/40">
+                        <span>إطلاق محرك الجمبرة</span>
+                        <i class="fas fa-bolt text-xs animate-bounce"></i>
+                    </button>
                 </div>
             `;
             container.appendChild(card);
         });
 
-        // دالة إرسال الطلب
+        // دالة إرسال الطلبات أوتوماتيكياً للبوت بلمحة زر عن بعد
         function orderJump(gameName, id) {
-            const selectedLevel = document.getElementById(`level-${id}`).value;
-            alert(`🎯 تم استلام طلبك يا بطل!\n🎮 اللعبة: ${gameName}\n📈 المطلوب: ${selectedLevel}\n\nسيقوم المشرف بتفعيل الجمبرة لحسابك فوراً.`);
+            const selectedPackValue = document.getElementById(`pack-${id}`).value;
+            
+            const payload = {
+                type: "jumper_request",
+                game: gameName,
+                pack: selectedPackValue
+            };
+
+            // إرسال البيانات بشكل مشفر وفوري للبوت وإغلاق الويب آب تلقائياً
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.sendData(JSON.stringify(payload));
+            } else {
+                alert(`🎯 تجربة محلية (خارج التيليجرام):\n🎮 اللعبة: ${gameName}\n📦 الباقة المشحونة: ${selectedPackValue}`);
+            }
         }
 
+        // إرسال طلبات الخدمات الأخرى للبوت
         function requestService(serviceName) {
-            alert(`طلب تفعيل: ${serviceName}\nيرجى التواصل مع الدعم لإرسال إيصال الدفع.`);
+            const payload = { type: "service_request", service: serviceName };
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.sendData(JSON.stringify(payload));
+            } else {
+                alert(`🎯 طلب خدمة: ${serviceName}`);
+            }
         }
 
-        // دالة التبديل السلس بين الواجهات الثلاثة
+        // دالة التبديل السلس والسريع بين الواجهات من الشريط السفلي
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(`${tabName}-tab`).classList.add('active');
             
-            // تحديث ألوان أزرار التنقل السفلي
             const navs = ['games', 'services', 'settings'];
             navs.forEach(nav => {
                 const el = document.getElementById(`nav-${nav}`);
                 if (nav === tabName) {
                     el.classList.remove('text-gray-500');
-                    el.classList.add('text-emerald-400');
+                    el.classList.add('text-amber-400');
                 } else {
-                    el.classList.remove('text-emerald-400');
+                    el.classList.remove('text-amber-400');
                     el.classList.add('text-gray-500');
                 }
             });
         }
 
-        // دالة البحث السريع
+        // دالة شريط البحث الفوري داخل المربعات
         function searchGames() {
             const input = document.getElementById('searchBox').value.toLowerCase();
             const cards = document.getElementsByClassName('game-card');
